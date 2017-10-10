@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) Henka Group, Noisiel, 2017. All rights reserved.
+
+Contact : tienhai.nguyen@gmail.com
+-->
+
+<html>
+    <head>
+        <meta charset='utf-8'/>
+        <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>Serris Pétanque</title>
+        <link rel='stylesheet' href='Css/knacss.css' type='text/css'/>
+        <link rel='stylesheet' href='Css/styles.css' type='text/css'/>
+        <script src="Js/jquery-3.2.1.min.js" type="text/javascript"> </script>
+        <script src="Js/henka.js" type="text/javascript"> </script>
+        <script src="Js/concours-scripts.js" type="text/javascript"> </script>
+    </head>
+    <body>
+        <!--Header-->
+        <header id="header" role="banner" class="pas txtcenter">
+            [concours name]
+        </header>
+
+        <!--Actions-->
+        <div class="actions concoursActions" class="flex-container">
+            <a class="hkButton bAccueil"><img src="Images/ic_home.png" alt="icone home"/> Accueil</a>
+            <span>
+                <a class="hkButton bNewEquipe"><img src="Images/ic_plus.png" alt="icone plus"/> Equipe</a>
+                <a class="hkButton bBegin"><img src="Images/ic_play.png" alt="icone play"/> Commencer</a>
+                <a class="hkButton bFinish"><img src="Images/ic_exit.png" alt="icone exit"/> Terminer</a>
+                <!--<a class="hkButton bPrint">Imprimer</a>-->
+            </span>
+        </div>
+
+        <!--Main-->
+        <div class="flex-container">
+            <main id="main" role="main" class="flex-item-fluid pam">
+            <div class="classement roundBlock">
+                <h2>Classement Général</h2>
+                <table id="classement" class="tbClassement">
+                    <tr>
+                        <th>Participants</th>
+                        <th class="points">Pts</th>
+                        <th class="gagner">G</th>
+                        <th class="perdu">P</th>
+                        <th class="diff">Diff.</th>
+                    </tr>
+                </table>
+            </div>
+            <div id="parties">
+            </div>
+            </main>
+        </div>
+
+        <!--Footer-->
+        <footer id="footer" role="contentinfo" class="pam columns">
+            <div class="column columnLeft">
+                Serris Pétanque
+            </div>
+            <div class="column columnCenter">
+            </div>
+            <div class=" column columnRight">
+                @HenkaDev
+            </div>
+        </footer>
+
+        <!--Dialog New equipe-->
+        <div class="hkDialog newEquipeDialog fadeBackground hidden">
+            <div class="container">
+                <div class="bClose"> </div>
+                <h2>Ajouter d'une équipe</h2>
+                <div class="content">
+                    <div class="fields equipeFields"><span class="label">Nom :</span> <input type="text" name="equipeName"/></div>
+                </div>
+                <div class="buttons">
+                    <a class="hkButton bModifyEquipe hidden"><img src="Images/ic_save.png" alt="icone save"/> Modifier</a>
+                    <a class="hkButton bAddEquipe"><img src="Images/ic_plus.png" alt="icone plus"/> Ajouter</a>
+                    <a class="hkButton bCancelAddEquipe"><img src="Images/ic_cancel.png" alt="icone annuler"/> Annuler</a>
+                </div>
+            </div>
+        </div>
+
+        <!--Dialog new score-->
+        <div class="hkDialog newScoreDialog fadeBackground hidden">
+            <div class="container">
+                <div class="bClose"> </div>
+                <h2>Ajouter un score</h2>
+                <div class="content">
+                    <div class="fields scoreFields"><span class="label equipeA"></span> <input type="number" value="0" min="0" max="13" name="scoreEquipeA"/></div>
+                    <div class="fields scoreFields"><span class="label equipeB"></span> <input type="number" value="0" min="0" max="13" name="scoreEquipeB"/></div>
+                </div>
+                <div class="buttons">
+                    <a class="hkButton bModifyScore hidden"><img src="Images/ic_save.png" alt="icone save"/> Modifier</a>
+                    <a class="hkButton bAddScore"><img src="Images/ic_plus.png" alt="icone plus"/> Ajouter</a>
+                    <a class="hkButton bCancelAddScore"><img src="Images/ic_cancel.png" alt="icone annuler"/> Annuler</a>
+                </div>
+            </div>
+        </div>
+
+        <!--Dialog New Player-->
+        <!--
+        <div class="hkDialog newPlayerDialog fadeBackground hidden">
+            <div class="container">
+                <div class="bClose"> </div>
+                <h2>Ajout d'un joueur</h2>
+                <div class="content">
+                    <div class="fields playerFields"><span class="label">Nom :</span> <input type="text" name="playerLastName"/></div>
+                    <div class="fields playerFields"><span class="label">Prénom :</span> <input type="text" name="playerName"/></div>
+                    <div class="fields playerFields"><span class="label">Adresse :</span> <input type="text" name="playerAddress"/></div>
+                    <div class="fields playerFields"><span class="label">Code Postale :</span> <input type="text" name="playerZip"/></div>
+                    <div class="fields playerFields"><span class="label">Ville :</span> <input type="text" name="playerCity"/></div>
+                    <div class="fields playerFields"><span class="label">Téléphone :</span> <input type="text" name="playerTel"/></div>
+                </div>
+                <div class="buttons">
+                    <a class="hkButton bModifyPlayer hidden">Modifier</a>
+                    <a class="hkButton bAddPlayer">Ajouter</a>
+                    <a class="hkButton bCancelAddPlayer">Annuler</a>
+                </div>
+            </div>
+        </div>
+        -->
+
+
+    </body>
+</html>
