@@ -2,19 +2,18 @@
  * @projectDescription scripts.js
  * Javascript serris petanque app.
  *
- * @author henka group
+ * @author HenkaDev, tienhai.nguyen@gmail.com
+ *         https://github.com/TienHai/HenkaPetanque
  * @version 0.1
  *
  *
- *
- *
- * 0.1 :
- *   Initial release.
+ * 0.1 (10/10/2017):
+ *  - Initial release.
  */
 
 /**
  *
- * Copyright (C) Henka Group, Noisiel, 2017. All rights reserved.
+ * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
  *
  */
 

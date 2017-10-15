@@ -1,11 +1,21 @@
 /*  
+ * @projectDescription styles.css
+ *
+ * @author HenkaDev, tienhai.nguyen@gmail.com
+ *         https://github.com/TienHai/HenkaPetanque
+ * @version 0.1
  *
  *
+ * 0.1 :
+ *  Initial release.
+ */
+
+/**
  *
- *
- *
+ * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
  *
  */
+
 
 body { position: relative; min-width: 624px;}
 ul { background: #bbb; }
@@ -93,12 +103,12 @@ td { border: none; border-bottom: 1px dotted #aaa; }
 .actions {
     background: #aaa;
     text-align: right;
-    padding-right:1em;
+    padding-right: 0.5em;
     min-height: 29px;
     max-height: 29px;
 }
 
-.concoursActions { text-align: initial; padding-left: 1em;}
+.concoursActions { text-align: initial; padding-left: 0.5em;}
 .concoursActions span { float: right; }
 
 /* ~~~~~~~ roundBlock ~~~~~~~ */
@@ -143,10 +153,13 @@ td { border: none; border-bottom: 1px dotted #aaa; }
 .tbClassement .perdu { width: 70px; }
 .tbClassement .diff { width: 70px; }
 
-/* ~~~~~~~ tbpartie ~~~~~~~ */
+/* ~~~~~~~ tbPartie ~~~~~~~ */
 .tbPartie { margin-bottom: 0; }
 .tbPartie .thScore { width: 80px;}
 
+/* ~~~~~~~ doAction ~~~~~~~ */
+.doAction { font-weight: bold; }
+
 /* Misc */
 .hidden { display: none; }
-.tdCenter { text-align:center; }
+.txtCenter { text-align:center; }

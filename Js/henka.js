@@ -2,19 +2,22 @@
  * @projectDescription henka.js
  * Define namespace henka.
  *
- * @author henka group
- * @version 0.1
+ * @author HenkaDev, tienhai.nguyen@gmail.com
+ *         https://github.com/TienHai/HenkaPetanque
+ * @version 0.2
  *
  *
- *
- *
- * 0.1 :
- *   Initial release.
+ * 0.2 (15/10/2014):
+ *  - Gestion d'un nombre d'equipes impair. 
+ *  - Gestion des boutons d'action.
+ *  - Ajout d'un dialogue de confirmation d'action.
+ * 0.1 (10/10/2017):
+ *  - Initial release.
  */
 
 /**
  *
- * Copyright (C) Henka Group, Noisiel, 2017. All rights reserved.
+ * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
  *
  */
 
@@ -300,12 +303,18 @@
                         equipeB.equipeId = keys[pos];
                         validate = this.validateVersus(parties, equipeA, equipeB);
                     }
-                    if (equipeB != undefined) {
+                    if (equipeB !== undefined) {
                         partie[j] = {"equipeA": equipeA, "equipeB": equipeB};
                         keys.splice(pos, 1);
                         keys.splice(0, 1);
                     }
                 }
+                // Si le nombre d'equipes est impair, on ajoute l'equipe restante avec 
+                // comme score 13-7
+                if (keys.length > 0) {
+                    partie[Object.keys(partie).length] = {"equipeA": equipes[keys[0]], "equipeB": null};
+                }
+
                 parties[i] = partie;
             }
             return {"valid": valid, "parties":parties};

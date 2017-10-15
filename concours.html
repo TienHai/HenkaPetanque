@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <!--
-Copyright (C) Henka Group, Noisiel, 2017. All rights reserved.
+    Contact : tienhai.nguyen@gmail.com
+    https://github.com/TienHai/HenkaPetanque
+-->
+    
+<!--
 
-Contact : tienhai.nguyen@gmail.com
+    Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
+
 -->
 
 <html>
@@ -28,8 +33,8 @@ Contact : tienhai.nguyen@gmail.com
             <a class="hkButton bAccueil"><img src="Images/ic_home.png" alt="icone home"/> Accueil</a>
             <span>
                 <a class="hkButton bNewEquipe"><img src="Images/ic_plus.png" alt="icone plus"/> Equipe</a>
-                <a class="hkButton bBegin"><img src="Images/ic_play.png" alt="icone play"/> Commencer</a>
-                <a class="hkButton bFinish"><img src="Images/ic_exit.png" alt="icone exit"/> Terminer</a>
+                <a class="hkButton bBegin hidden"><img src="Images/ic_play.png" alt="icone play"/> Commencer</a>
+                <a class="hkButton bFinish hidden"><img src="Images/ic_exit.png" alt="icone exit"/> Terminer</a>
                 <!--<a class="hkButton bPrint">Imprimer</a>-->
             </span>
         </div>
@@ -99,6 +104,22 @@ Contact : tienhai.nguyen@gmail.com
             </div>
         </div>
 
+        <!--Dialog confirm-->
+        <div class="hkDialog confirmDialog fadeBackground hidden">
+            <div class="container">
+                <div class="bClose"> </div>
+                <h2>Confirmation</h2>
+                <div class="content">
+                    <p>Voulez-vous vraiment continuer votre action ?</p>
+                    <p class="doAction txtCenter"></p>
+                </div>
+                <div class="buttons">
+                    <a class="hkButton bConfirmOk"><img src="Images/ic_ok.png" alt="icone ok"/> Ok</a>
+                    <a class="hkButton bConfirmKo"><img src="Images/ic_cancel.png" alt="icone cancel"/> Annuler</a>
+                </div>
+            </div>
+        </div>
+
         <!--Dialog New Player-->
         <!--
         <div class="hkDialog newPlayerDialog fadeBackground hidden">
@@ -121,7 +142,6 @@ Contact : tienhai.nguyen@gmail.com
             </div>
         </div>
         -->
-
 
     </body>
 </html>

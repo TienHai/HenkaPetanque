@@ -2,19 +2,22 @@
  * @projectDescription scripts.js
  * Javascript serris petanque app.
  *
- * @author henka group
- * @version 0.1
+ * @author HenkaDev, tienhai.nguyen@gmail.com
+ *         https://github.com/TienHai/HenkaPetanque
+ * @version 0.2
  *
  *
- *
- *
- * 0.1 :
- *   Initial release.
+ * 0.2 (15/10/2014):
+ *  - Gestion d'un nombre d'equipes impair. 
+ *  - Gestion des boutons d'action.
+ *  - Ajout d'un dialogue de confirmation d'action.
+ * 0.1 (10/10/2017):
+ *  - Initial release.
  */
 
 /**
  *
- * Copyright (C) Henka Group, Noisiel, 2017. All rights reserved.
+ * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
  *
  */
 
@@ -63,15 +66,17 @@
             + ")");
         
         // Gestion des boutons
-        if (vars.concours.status !== 0) {
-            $(".bNewEquipe").addClass("hidden");
-            $(".bBegin").addClass("hidden");
-
+        if (vars.concours.status === 0) {
+            $(".bBegin").removeClass("hidden");
+        } else { 
+            if (vars.concours.status === 1) {
+                $(".bNewEquipe").addClass("hidden");
+                $(".bFinish").removeClass("hidden");
+            } else {
+                $(".bNewEquipe").addClass("hidden");
+            }
             loadParties();
         }
-		if (vars.concours.status === 2) {
-            $(".bFinish").addClass("hidden");
-		}
         
         // Chargement des equipes
         loadClassement();
@@ -112,18 +117,12 @@
 
         // Commencer
         $(".bBegin").on("click", function() {
-            onBeginConcours();
+            onConfirm("Commencer le concours", onBeginConcours);
         });
 
         // Terminer
         $(".bFinish").on("click", function() {
-            //
-            $(this).addClass("hidden");
-            $(".tbPartie tr").off("click");
-            
-            //
-            vars.concours.status = 2;
-            $.henka.storage.modifyConcours(vars.concoursId, vars.concours);
+            onConfirm("Terminer le concours", onFinishConcours);
         });
 
         // --------------------------------------------------------------------
@@ -217,7 +216,11 @@
                     for (var j = 0; j < rowIds.length; j++) {
                         var equipeA = rows[j].equipeA;
                         var equipeB = rows[j].equipeB;
-                        if (equipeA.equipeId === id && equipeA.score) {
+                        if (!equipeB && equipeA.equipeId === id ) {
+                            points += 1;
+                            gagner += 1;
+                            diff += 6;
+                        } else if (equipeA.equipeId === id && equipeA.score) {
                             if (parseInt(equipeA.score,10) > parseInt(equipeB.score,10)) {
                                 points += 1;
                                 gagner += 1;
@@ -225,7 +228,7 @@
                                 perdu += 1;
                             }
                             diff += parseInt(equipeA.score,10) - parseInt(equipeB.score,10);
-                        } else if (equipeB.equipeId === id && equipeB.score) {
+                        } else if (equipeB && equipeB.equipeId === id && equipeB.score) {
                             if (parseInt(equipeB.score,10) > parseInt(equipeA.score,10)) {
                                 points += 1;
                                 gagner += 1;
@@ -237,13 +240,13 @@
                     }
                 }
             }
-            $tr.append($("<td class='equipePts'>").addClass("tdCenter").text(points));
-            $tr.append($("<td class='equipeG'>").addClass("tdCenter").text(gagner));
-            $tr.append($("<td class='equipeP'>").addClass("tdCenter").text(perdu));
+            $tr.append($("<td class='equipePts'>").addClass("txtCenter").text(points));
+            $tr.append($("<td class='equipeG'>").addClass("txtCenter").text(gagner));
+            $tr.append($("<td class='equipeP'>").addClass("txtCenter").text(perdu));
             if (diff > 0)
-                $tr.append($("<td class='equipeDiff'>").addClass("tdCenter").text("+" + diff));
+                $tr.append($("<td class='equipeDiff'>").addClass("txtCenter").text("+" + diff));
             else 
-                $tr.append($("<td class='equipeDiff'>").addClass("tdCenter").text(diff));
+                $tr.append($("<td class='equipeDiff'>").addClass("txtCenter").text(diff));
 
             return {"tr": $tr, "name": values.name, "points":points, "diff":diff};
         }
@@ -274,12 +277,17 @@
                     var equipeA = versus.equipeA; 
                     var equipeB = versus.equipeB;
                     var $tr = $("<tr>").data("rowId", j);
-                    $tr.append($("<td>").data("equipe", "equipeA").text(equipeA.name)); 
-                    $tr.append($("<td>").data("equipe", "equipeB").text(equipeB.name));
-                    if (equipeA.score) {
-                        $tr.append($("<td class='score tdCenter'>").text(equipeA.score + " - " + equipeB.score));
+                    $tr.append($("<td>").data("equipe", "equipeA").text(equipeA.name));
+                    if (equipeB) {
+                        $tr.append($("<td>").data("equipe", "equipeB").text(equipeB.name));
                     } else {
-                        $tr.append($("<td class='score tdCenter'>"));
+                        $tr.append($("<td>").text("--"));
+                        $tr.append($("<td class='score txtCenter'>").text("13 - 7"));
+                    }
+                    if (equipeA.score) {
+                        $tr.append($("<td class='score txtCenter'>").text(equipeA.score + " - " + equipeB.score));
+                    } else if (equipeB) {
+                        $tr.append($("<td class='score txtCenter'>"));
                     } 
                     $table.append($tr);
                 }
@@ -302,6 +310,26 @@
 
         // --------------------------------------------------------------------
         // Call Functions
+
+        //onConfirm - confirm before execute func.
+        function onConfirm(action, func) {
+            var $dialog = $(".confirmDialog");
+            
+            // Events
+            $(".bConfirmOk").off("click");
+            $(".bConfirmKo").off("click");
+
+            $(".bConfirmOk").on("click", function() {
+                $dialog.addClass("hidden");
+                func();
+            });
+            $(".bConfirmKo").on("click", function() {
+                $dialog.addClass("hidden");
+            });
+
+            $dialog.removeClass("hidden");
+            $dialog.find(".doAction").text("\""+action+"\"");
+        }
 
         // onCloseDialogNewEquipe - Close dialog add new equipe.
         function onCloseDialogNewEquipe() {
@@ -386,9 +414,20 @@
             //
             $(".bNewEquipe").addClass("hidden");
             $(".bBegin").addClass("hidden");
+            $(".bFinish").removeClass("hidden");
 
             //
             vars.concours.status = 1;
+            $.henka.storage.modifyConcours(vars.concoursId, vars.concours);
+        }
+
+        // onFinishConcours - Finish concours.
+        function onFinishConcours() {
+            $(".bFinish").addClass("hidden");
+            $(".tbPartie tr").off("click");
+            
+            // Update concours
+            vars.concours.status = 2;
             $.henka.storage.modifyConcours(vars.concoursId, vars.concours);
         }
 
@@ -410,6 +449,8 @@
             var parties = data[vars.concoursId];
             var partie = parties[partieId];
             var versus = partie[rowId];
+            if (!versus.equipeB)
+                return;
 
             var $dialog = $(".newScoreDialog")
                 .data("partieId", partieId)
