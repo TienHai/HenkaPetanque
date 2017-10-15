@@ -72,7 +72,7 @@
         addConcours: function(data) {
             var key = $.henka.keys.concours;
             var nextId = this.getNextId(key);
-            
+
             var res = this.loadStorage(key);
             if (!res)
                 res = {};
@@ -117,7 +117,7 @@
             var parties = res[concoursId];
             var partie = parties[partieId];
             var versus = partie[rowId];
-            
+
             //
             versus.equipeA.score = data.equipeA;
             versus.equipeB.score = data.equipeB;
@@ -134,7 +134,7 @@
             var parties = res[concoursId];
             var partie = parties[partieId];
             var versus = partie[rowId];
-            
+
             //
             versus.equipeA.score = data.equipeA;
             versus.equipeB.score = data.equipeB;

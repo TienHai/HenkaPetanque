@@ -40,7 +40,7 @@
 
         // --------------------------------------------------------------------
         // Events
-        
+
         // New concours
         var $bNewConcours = $(".bNewConcours");
         $bNewConcours.on("click", function() {
@@ -78,7 +78,7 @@
 
         // --------------------------------------------------------------------
         // Init Functions
-        
+
         function loadConcours() {
             var $tbConcours = $("#concours");
             var concours = $.henka.storage.loadStorage($.henka.keys.concours);
@@ -98,7 +98,7 @@
             var data = concours[concoursId];
             var $tr = createNewConcoursRow(concoursId, data);
             $tbConcours.append($tr);
-            
+
             $tr.on("click", function() {
                 var $tr = $(this);
                 window.location = "concours.html?concoursId="+$tr.data("concoursId");
@@ -122,7 +122,7 @@
             $tr.append($("<td>").text($.henka.concoursStatus[values.status]));
             return $tr;
         }
-        
+
         // --------------------------------------------------------------------
         // Call Functions
 

@@ -53,7 +53,7 @@
             return;
         var concours = $.henka.storage.loadStorage($.henka.keys.concours);
         vars.concours = concours[vars.concoursId];
-        
+
         // Text du header
         $("#header").text(
             $.henka.storage.formatedDate(vars.concours.date)
@@ -64,7 +64,7 @@
             + " (" 
             + $.henka.concoursStatus[vars.concours.status] 
             + ")");
-        
+
         // Gestion des boutons
         if (vars.concours.status === 0) {
             $(".bBegin").removeClass("hidden");
@@ -77,13 +77,13 @@
             }
             loadParties();
         }
-        
+
         // Chargement des equipes
         loadClassement();
 
         // --------------------------------------------------------------------
         // Events
-        
+
         // Accueil
         var $bAccueil = $(".bAccueil");
         $bAccueil.on("click", function() {
@@ -165,8 +165,8 @@
                 $tbClassement.append(classement[i].tr);
 
             // Events Modfiy Equipes 
-			if (vars.concours.status !== 0)
-				return;
+            if (vars.concours.status !== 0)
+                return;
             $("#classement tr").off("click");
             $("#classement tr").on("click", function() {
                 var $tr = $(this);
@@ -204,7 +204,7 @@
         function createClassementEquipeRow(id, values) {
             var $tr = $("<tr>").data("equipeId", id);
             $tr.append($("<td class='equipeName'>").text(values.name));
-            
+
             var points = 0, gagner = 0, perdu = 0, diff = 0;
             var data = $.henka.storage.loadStorage($.henka.keys.concours_parties);
             if (data && data[vars.concoursId]) {
@@ -296,8 +296,8 @@
             }
 
             // Events Partie - Add score 
-			if (vars.concours.status === 2)
-				return;
+            if (vars.concours.status === 2)
+                return;
             $(".tbPartie tr").on("click", function() {
                 var $this = $(this);
                 if ($this.find("th").length > 0)
@@ -314,7 +314,7 @@
         //onConfirm - confirm before execute func.
         function onConfirm(action, func) {
             var $dialog = $(".confirmDialog");
-            
+
             // Events
             $(".bConfirmOk").off("click");
             $(".bConfirmKo").off("click");
@@ -398,7 +398,7 @@
                 $dialog.find("input[name='equipeName']").focus();
                 return;
             }
-            
+
             if ($.henka.storage.addConcoursEquipe(vars.concoursId, data)) {
                 onCloseDialogNewEquipe();
                 updateEquipes();
@@ -410,7 +410,7 @@
             var parties = $.henka.storage.generateParties(vars.concoursId, vars.concours);
             $.henka.storage.addConcoursParties(vars.concoursId, parties);
             createPartiesRow(parties);
-            
+
             //
             $(".bNewEquipe").addClass("hidden");
             $(".bBegin").addClass("hidden");
@@ -425,7 +425,7 @@
         function onFinishConcours() {
             $(".bFinish").addClass("hidden");
             $(".tbPartie tr").off("click");
-            
+
             // Update concours
             vars.concours.status = 2;
             $.henka.storage.modifyConcours(vars.concoursId, vars.concours);
@@ -472,10 +472,10 @@
             var $dialog = $(".newScoreDialog");
             data.equipeA = $dialog.find("input[name='scoreEquipeA']").val();
             data.equipeB = $dialog.find("input[name='scoreEquipeB']").val();
-            
+
             if ($.henka.storage.addConcoursPartieScore(
                     vars.concoursId, $dialog.data("partieId"), $dialog.data("rowId") , data)) {
-                
+
                 onCloseDialogNewScore();
                 updateScore($dialog.data("partieId"), $dialog.data("rowId"), data);
             }
@@ -509,10 +509,10 @@
             var $dialog = $(".newScoreDialog");
             data.equipeA = $dialog.find("input[name='scoreEquipeA']").val();
             data.equipeB = $dialog.find("input[name='scoreEquipeB']").val();
-            
+
             if ($.henka.storage.modifyConcoursPartieScore(
                     vars.concoursId, $dialog.data("partieId"), $dialog.data("rowId") , data)) {
-                
+
                 onCloseDialogNewScore();
                 updateScore($dialog.data("partieId"), $dialog.data("rowId"), data);
             }
