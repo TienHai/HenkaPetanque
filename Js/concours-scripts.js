@@ -4,10 +4,12 @@
  *
  * @author HenkaDev, tienhai.nguyen@gmail.com
  *         https://github.com/TienHai/HenkaPetanque
- * @version 0.2
+ * @version 0.3
  *
  *
- * 0.2 (15/10/2014):
+ * 0.3 (22/03/2018):
+ *  - commencement de la gestion du type de partie doublette tournante. 
+ * 0.2 (15/10/2017):
  *  - Gestion d'un nombre d'equipes impair. 
  *  - Gestion des boutons d'action.
  *  - Ajout d'un dialogue de confirmation d'action.
@@ -17,7 +19,7 @@
 
 /**
  *
- * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
+ * Copyright (C) HenkaDev, Noisiel, 2018. All rights reserved.
  *
  */
 
@@ -220,7 +222,7 @@
                             points += 1;
                             gagner += 1;
                             diff += 6;
-                        } else if (equipeA.equipeId === id && equipeA.score) {
+                        } else if ((equipeA.equipeId === id || equipeA.firstId === id || equipeA.secondId === id) && equipeA.score) {
                             if (parseInt(equipeA.score,10) > parseInt(equipeB.score,10)) {
                                 points += 1;
                                 gagner += 1;
@@ -228,7 +230,7 @@
                                 perdu += 1;
                             }
                             diff += parseInt(equipeA.score,10) - parseInt(equipeB.score,10);
-                        } else if (equipeB && equipeB.equipeId === id && equipeB.score) {
+                        } else if (equipeB && (equipeB.equipeId === id || equipeB.firstId === id || equipeB.secondId === id) && equipeB.score) {
                             if (parseInt(equipeB.score,10) > parseInt(equipeA.score,10)) {
                                 points += 1;
                                 gagner += 1;

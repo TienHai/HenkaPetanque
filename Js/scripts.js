@@ -13,7 +13,7 @@
 
 /**
  *
- * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
+ * Copyright (C) HenkaDev, Noisiel, 2018. All rights reserved.
  *
  */
 

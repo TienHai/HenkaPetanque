@@ -4,10 +4,12 @@
  *
  * @author HenkaDev, tienhai.nguyen@gmail.com
  *         https://github.com/TienHai/HenkaPetanque
- * @version 0.2
+ * @version 0.3
  *
  *
- * 0.2 (15/10/2014):
+ * 0.3 (22/03/2018):
+ *  - commencement de la gestion du type de partie doublette tournante. 
+ * 0.2 (15/10/2017):
  *  - Gestion d'un nombre d'equipes impair. 
  *  - Gestion des boutons d'action.
  *  - Ajout d'un dialogue de confirmation d'action.
@@ -17,7 +19,7 @@
 
 /**
  *
- * Copyright (C) HenkaDev, Noisiel, 2017. All rights reserved.
+ * Copyright (C) HenkaDev, Noisiel, 2018. All rights reserved.
  *
  */
 
@@ -44,14 +46,15 @@
     };
 
     $.henka.concoursStatus = {
-        0: "En préparation",
+        0: "En preparation",
         1: "En cours",
         2: "Terminer"
     };
 
     $.henka.concoursType = {
-        0: "doublette",
-        1: "triplette"
+        0: "Doublette",
+        1: "Triplette",
+        2: "Tournante"
     };
 
     $.henka.storage = {
@@ -245,6 +248,9 @@
             return null;
         },
 
+        /**
+	 *
+	 */
         formatedDate: function(dt) {
             var d = new Date(dt);
             var day = d.getDate();
@@ -261,18 +267,108 @@
             return date;
         },
 
+        /**
+	 *
+	 */
         generateParties: function(concoursId, concours) {
+            if (concours.type == 2) {
+                return this.makePartiesForTournante(concoursId, concours).parties;
+            }
+           
             var res = this.makeParties(concoursId, concours);
             var count = 0;
             while (!res.valid) {
                 res = this.makeParties(concoursId, concours);
-                if (count > 100)
+                if (count > 1000)
                     break;
                 count += 1;
             }
+
             return res.parties;
         },
 
+	/**
+	 *
+	 */
+        makePartiesForTournante: function(concoursId, concours) {
+            var valid = true;
+	    var parties = {};
+            var concours_equipes = $.henka.storage.loadStorage($.henka.keys.concours_equipes);
+            var equipes = concours_equipes[concoursId];
+
+            for (var i = 0; i < concours.partie; i++) {
+                var partie = {};
+                var keys = Object.keys(equipes).slice();
+                for (var j = 0; j < Object.keys(equipes).length/4; j++) {
+                    $.shuffle(keys);
+		    var res = this.makeEquipeTournante(parties, equipes, keys);
+		    var equipeA = res.equipe; 
+		    keys = res.keys;
+		    res = this.makeEquipeTournante(parties, equipes, keys);
+	            var equipeB = res.equipe;
+		    keys = res.keys;
+                    partie[j] = {"equipeA": equipeA, "equipeB": equipeB};
+
+            	}
+                parties[i] = partie;
+            }
+
+            return {"valid": valid, "parties":parties};
+	},
+
+	/**
+ 	*
+	*/
+	makeEquipeTournante: function(parties, equipes, keys) {
+	    var pos = 1;
+	    var equipe = $.extend(true, {}, equipes[keys[0]]);
+	    equipe.firstId = keys[0];
+	    if (equipes[keys[pos]]) {
+		equipe.secondId = keys[pos];
+		equipe.name = equipe.name + " / " + equipes[keys[pos]].name;
+	    }
+	    var validate = this.validateEquipeTournante(parties, equipe);
+	    while (!validate) {
+		pos += 1;
+		if (pos > keys.length -1) {
+		    pos -= 1;
+		    break;
+		}
+		equipe.secondId = keys[pos];
+		equipe.name = equipes[keys[0]].name + " / " + equipes[keys[pos]].name; 
+		validate = this.validateEquipeTournante(parties, equipe);
+	    }
+		
+	    keys.splice(pos, 1);
+	    keys.splice(0, 1);
+	
+	    return {"equipe": equipe, "keys": keys};
+	},
+
+	/**
+ 	*
+	*/
+	validateEquipeTournante: function(parties, equipe) {
+	    var pair = [equipe.firstId, equipe.secondId];
+            $(parties).each( function(key, partie) {
+                $(partie).each( function(k, v) {
+		    if (v.equipeA) {
+                        if (($.inArray(v.equipeA.firstId, versus) !== -1 && 
+                            $.inArray(v.equipeA.secondId, versus) !== -1) ||
+		   	    ($.inArray(v.equipeB.firstId, versus) !== -1 && 
+			    $.inArray(v.equipeB.secondId, versus) !== -1)) {
+                          
+		            return false;
+                        }
+		    }
+                });
+            });
+            return true;
+	},
+
+        /**
+	 *
+	 */
         makeParties: function(concoursId, concours) {
             var valid = true;
             var parties = {};
@@ -284,9 +380,9 @@
                 for (var j = 0; j < Object.keys(equipes).length/2; j++) {
                     $.shuffle(keys);
                     var pos = 1;
-                    var equipeA = equipes[keys[0]];
+	            var equipeA = $.extend(true, {}, equipes[keys[0]]);
                     equipeA.equipeId = keys[0];
-                    var equipeB = equipes[keys[pos]];
+	            var equipeB = $.extend(true, {}, equipes[keys[pos]]);
                     if (equipeB)
                         equipeB.equipeId = keys[pos];
                     var validate = this.validateVersus(parties, equipeA, equipeB);
@@ -297,9 +393,7 @@
                             pos -= 1;
                             break;
                         }
-                        equipeA = equipes[keys[0]]; 
-                        equipeA.equipeId = keys[0];
-                        equipeB = equipes[keys[pos]]; 
+	                equipeB = $.extend(true, {}, equipes[keys[pos]]);
                         equipeB.equipeId = keys[pos];
                         validate = this.validateVersus(parties, equipeA, equipeB);
                     }
@@ -324,11 +418,12 @@
             var versus = [equipeA, equipeB];
             $(parties).each( function(key, partie) {
                 $(partie).each( function(k, v) {
-                    if (v.equipeA)
-                    if ($.inArray(v.equipeA, versus) !== -1 && 
-                        $.inArray(v.equipeB, versus) !== -1) {
-                            return false;
-                    }
+		    if (v.equipeA) {
+                    	if ($.inArray(v.equipeA, versus) !== -1 && 
+                        	$.inArray(v.equipeB, versus) !== -1) {
+                            	return false;
+                    	}
+		    }
                 });
             });
             return true;
