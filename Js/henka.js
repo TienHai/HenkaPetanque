@@ -4,9 +4,11 @@
  *
  * @author HenkaDev, tienhai.nguyen@gmail.com
  *         https://github.com/TienHai/HenkaPetanque
- * @version 0.3
+ * @version 0.4
  *
  *
+ * 0.4 (18/05/2018):
+ *  - Refonte complete du tirage des matches pour doublette et triplette.
  * 0.3 (22/03/2018):
  *  - commencement de la gestion du type de partie doublette tournante. 
  * 0.2 (15/10/2017):
@@ -275,16 +277,7 @@
                 return this.makePartiesForTournante(concoursId, concours).parties;
             }
            
-            var res = this.makeParties(concoursId, concours);
-            var count = 0;
-            while (!res.valid) {
-                res = this.makeParties(concoursId, concours);
-                if (count > 1000)
-                    break;
-                count += 1;
-            }
-
-            return res.parties;
+            return this.makeParties(concoursId, concours);
         },
 
 	/**
@@ -367,67 +360,84 @@
 	},
 
         /**
+	 *  {
+	 *    "parti_index": {
+	 *       "match_index": {
+	 *         "equipeA": {"name": "equipe_name", "equipeId": "equipe_index"},
+	 *         "equipeB": {"name": "equipe_name", "equipeId": "equipe_index"}
+	 *       }
+	 *
+	 *       "match_index + 1": {...}
+	 *    }
+	 *    
+	 *    "parti_index +1 ": {...}
+	 *  }
 	 *
 	 */
         makeParties: function(concoursId, concours) {
-            var valid = true;
             var parties = {};
             var concours_equipes = $.henka.storage.loadStorage($.henka.keys.concours_equipes);
-            var equipes = concours_equipes[concoursId];
-            for(var i = 0; i < concours.partie; i++) {
+	    var equipes = $.map(concours_equipes[concoursId], function(value, index) {
+       	        return {"name": value.name, "equipeId": index};
+            });
+	    var matrice = this.createMatrice(equipes);
+            var matches = this.createMatches(matrice);
+            for (var i = 0; i < concours.partie; i++) {
                 var partie = {};
-                var keys = Object.keys(equipes).slice();
-                for (var j = 0; j < Object.keys(equipes).length/2; j++) {
-                    $.shuffle(keys);
-                    var pos = 1;
-	            var equipeA = $.extend(true, {}, equipes[keys[0]]);
-                    equipeA.equipeId = keys[0];
-	            var equipeB = $.extend(true, {}, equipes[keys[pos]]);
-                    if (equipeB)
-                        equipeB.equipeId = keys[pos];
-                    var validate = this.validateVersus(parties, equipeA, equipeB);
-                    while (!validate) {
-                        pos += 1;
-                        if (pos > keys.length -1) {
-                            valid = false;
-                            pos -= 1;
-                            break;
-                        }
-	                equipeB = $.extend(true, {}, equipes[keys[pos]]);
-                        equipeB.equipeId = keys[pos];
-                        validate = this.validateVersus(parties, equipeA, equipeB);
-                    }
-                    if (equipeB !== undefined) {
-                        partie[j] = {"equipeA": equipeA, "equipeB": equipeB};
-                        keys.splice(pos, 1);
-                        keys.splice(0, 1);
-                    }
-                }
-                // Si le nombre d'equipes est impair, on ajoute l'equipe restante avec 
-                // comme score 13-7
-                if (keys.length > 0) {
-                    partie[Object.keys(partie).length] = {"equipeA": equipes[keys[0]], "equipeB": null};
-                }
-
+		for (var j = 0; j < matches[i].length; j++) {
+		    if (matches[i][j][0] === null)
+		       partie[j] = {"equipeA": matches[i][j][1], "equipeB": matches[i][j][0]};
+		    else
+		       partie[j] = {"equipeA": matches[i][j][0], "equipeB": matches[i][j][1]};
+		}
                 parties[i] = partie;
-            }
-            return {"valid": valid, "parties":parties};
+	    }
+
+            return parties;
         },
 
-        validateVersus: function(parties, equipeA, equipeB) {
-            var versus = [equipeA, equipeB];
-            $(parties).each( function(key, partie) {
-                $(partie).each( function(k, v) {
-		    if (v.equipeA) {
-                    	if ($.inArray(v.equipeA, versus) !== -1 && 
-                        	$.inArray(v.equipeB, versus) !== -1) {
-                            	return false;
-                    	}
-		    }
-                });
-            });
-            return true;
-        }
+	createMatrice: function(equipes) {
+	    if (equipes.length%2 != 0)
+	        equipes.push(null);
+            equipes = $.shuffle(equipes);
+            var array = Array();
+	    for (var i = 1; i < equipes.length; i++) {
+		if (array.length === 0)
+		    array.push(this.row(equipes));
+		else
+		    array.push(this.row(array[array.length-1]));
+	    }
+
+	    return array;
+	},
+ 
+	row: function(array) {
+            var tmp = Array();
+            tmp.push(array[0]);
+            for (var i = 2; i < array.length; i++) {
+                tmp.push(array[i]);
+	    }
+            tmp.push(array[1]);
+
+            return tmp;
+       },
+
+       createMatches: function(matrice) {
+           var matches = Array();
+           for (var i = 0; i < matrice.length; i++) {
+              var match = Array();
+              for (var j = 0; j < matrice[i].length/2; j++) {
+                 var tmp = Array();
+                 tmp.push(matrice[i][j]);
+                 tmp.push(matrice[i][(matrice[i].length - 1) - j]);
+                 match.push(tmp);
+              }
+    
+              matches.push($.shuffle(match));
+          }
+
+          return $.shuffle(matches);
+       }
 
     };
 

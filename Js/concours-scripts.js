@@ -4,9 +4,11 @@
  *
  * @author HenkaDev, tienhai.nguyen@gmail.com
  *         https://github.com/TienHai/HenkaPetanque
- * @version 0.3
+ * @version 0.4
  *
  *
+ * 0.4 (18/05/2018):
+ *  - Refonte complete du tirage des matches pour doublette et triplette.
  * 0.3 (22/03/2018):
  *  - commencement de la gestion du type de partie doublette tournante. 
  * 0.2 (15/10/2017):
